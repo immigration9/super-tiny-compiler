@@ -40,10 +40,50 @@ function parser(tokens) {
 
       // 지금부터 token들에 대해 loop을 시작하여
       // 닫는 parenthesis를 만나기 전까지 반복한다
+      // 이렇게 되면, 중간에 닫는 parenthesis를 만나게 되면
+      // 
       while (
         token.type !== "paren" ||
         (token.type === "paren" && token.value !== ")")
-      ) {}
+      ) {
+        node.params.push(walk());
+        token = tokens[current];
+      }
+
+      current++;
+
+      return node;
     }
+
+    throw new TypeError(token.type);
   }
+
+  let ast = {
+    type: 'Program',
+    body: []
+  }
+
+  // 이제 walk를 시작하여
+  // ast.body 내부에 token들을 전부 push 해준다
+  while (current < tokens.length) {
+    ast.body.push(walk());
+  }
+
+  return ast;
 }
+
+module.exports = {
+  parser
+}
+
+// console.log(parser([
+//   { type: 'paren', value: '(' },
+//   { type: 'name', value: 'ADD' },
+//   { type: 'number', value: '3' },
+//   { type: 'paren', value: '(' },
+//   { type: 'name', value: 'SUBTRACT' },
+//   { type: 'number', value: '5' },
+//   { type: 'number', value: '3' },
+//   { type: 'paren', value: ')' },
+//   { type: 'paren', value: ')' }
+// ]).body[0].params)

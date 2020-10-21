@@ -82,6 +82,6 @@ function tokenizer(input) {
   return tokens;
 }
 
-module.export = {
+module.exports = {
   tokenizer,
 };
